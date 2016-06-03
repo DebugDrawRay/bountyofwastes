@@ -33,10 +33,13 @@ public class EightWayMovement : MonoBehaviour
 
     void Start()
     {
-        bobTween = bobTarget.DOLocalMoveY(bobThreshold + bobTarget.localPosition.y, bobSpeed);
-        bobTween.SetLoops(-1, LoopType.Yoyo);
-        bobTween.SetEase(bobEase);
-        bobTween.Pause();
+        if (enableHeadBob)
+        {
+            bobTween = bobTarget.DOLocalMoveY(bobThreshold + bobTarget.localPosition.y, bobSpeed);
+            bobTween.SetLoops(-1, LoopType.Yoyo);
+            bobTween.SetEase(bobEase);
+            bobTween.Pause();
+        }
 
         if(GetComponent<InputBus>())
         {

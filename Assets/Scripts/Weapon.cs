@@ -66,7 +66,6 @@ public class Weapon : MonoBehaviour
 
         if(Physics.Raycast(dirRay, out hit))
         {
-            Debug.Log(Vector3.Distance(transform.position, hit.point));
             if (Vector3.Distance(transform.position, hit.point) > orientationDistanceMin)
             {
                 Quaternion look = Quaternion.LookRotation(hit.point - weapon.position);

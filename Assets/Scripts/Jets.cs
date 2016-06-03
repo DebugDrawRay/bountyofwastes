@@ -12,6 +12,9 @@ public class Jets : MonoBehaviour
     public float checkGroundedDistance;
     public LayerMask ground;
 
+    //Double Jump
+    private bool inAir;
+
     void Start()
     {
         if (GetComponent<InputBus>())
@@ -33,20 +36,34 @@ public class Jets : MonoBehaviour
         {
             Vector3 direction = Quaternion.AngleAxis(-input.Move.x * 45, Vector3.up) * (input.Move.x * transform.right);
 
-            if (input.Jump && CheckGrounded())
+            if (CheckGrounded())
             {
-                if (input.LockOn)
+                if (input.Jump)
                 {
-                    if (input.Move.x == 0)
+                    if (input.LockOn)
+                    {
+                        if (input.Move.x == 0)
+                        {
+                            Vector3 force = Vector3.up * jetStrength;
+                            rigid.AddForce(force, ForceMode.Impulse);
+                        }
+                    }
+                    else
                     {
                         Vector3 force = Vector3.up * jetStrength;
                         rigid.AddForce(force, ForceMode.Impulse);
+                        inAir = true;
                     }
                 }
-                else
+            }
+            else
+            {
+                if(inAir && input.Jump)
                 {
                     Vector3 force = Vector3.up * jetStrength;
-                    rigid.AddForce(force, ForceMode.Impulse);
+                    rigid.velocity = new Vector3(rigid.velocity.x, 0, rigid.velocity.z);
+                    rigid.AddForce(force * 1.5f, ForceMode.Impulse);
+                    inAir = false;
                 }
             }
         }

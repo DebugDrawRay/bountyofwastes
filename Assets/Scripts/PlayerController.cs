@@ -1,23 +1,25 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class PlayerController : MonoBehaviour
+public class PlayerController : InputController
 {
-    private InputState input;
-    private PlayerActions actions;
+    public static PlayerController instance;
 
-    public InputBus targetObject;
-
-	void Start()
+    void Awake()
     {
-        input = new InputState();
-        actions = PlayerActions.BindKeyboardAndJoystick();
-	}
-	
+        if(instance != null)
+        {
+            Destroy(gameObject);
+        }
+        instance = this;
+
+        Initialize();
+    }
+
 	void Update()
     {
         UpdateInput();
-        targetObject.Actions(input);
+        UpdateBus();
 	}
 
     void UpdateInput()

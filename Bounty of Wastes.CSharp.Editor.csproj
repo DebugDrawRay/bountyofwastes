@@ -94,30 +94,6 @@
     <Reference Include="SyntaxTree.VisualStudio.Unity.Bridge">
       <HintPath>Library\UnityAssemblies\SyntaxTree.VisualStudio.Unity.Bridge.dll</HintPath>
     </Reference>
-    <Reference Include="UnityEditor.EditorTestsRunner">
-      <HintPath>Library\UnityAssemblies\UnityEditor.EditorTestsRunner.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEditor.Networking">
-      <HintPath>Library\UnityAssemblies\UnityEditor.Networking.dll</HintPath>
-    </Reference>
-    <Reference Include="nunit.framework">
-      <HintPath>Library\UnityAssemblies\nunit.framework.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEditor.UI">
-      <HintPath>Library\UnityAssemblies\UnityEditor.UI.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.Networking">
-      <HintPath>Library\UnityAssemblies\UnityEngine.Networking.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEditor.Advertisements">
-      <HintPath>Library\UnityAssemblies\UnityEditor.Advertisements.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEditor.TreeEditor">
-      <HintPath>Library\UnityAssemblies\UnityEditor.TreeEditor.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.UI">
-      <HintPath>Library\UnityAssemblies\UnityEngine.UI.dll</HintPath>
-    </Reference>
     <Reference Include="DOTween">
       <HintPath>Assets\Third Party\DOTween\DOTween.dll</HintPath>
     </Reference>
@@ -133,6 +109,12 @@
     <Reference Include="DOTweenEditor">
       <HintPath>Assets\Third Party\DOTween\Editor\DOTweenEditor.dll</HintPath>
     </Reference>
+    <Reference Include="Pathfinding.JsonFx">
+      <HintPath>Assets\Third Party\AstarPathfindingProject\Plugins\JsonFx\Pathfinding.JsonFx.dll</HintPath>
+    </Reference>
+    <Reference Include="Pathfinding.Ionic.Zip.Reduced">
+      <HintPath>Assets\Third Party\AstarPathfindingProject\Plugins\DotNetZip\Pathfinding.Ionic.Zip.Reduced.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="Bounty of Wastes.CSharp.csproj">
@@ -141,6 +123,22 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\Third Party\AstarPathfindingProject\Editor\AnimationLinkEditor.cs" />
+    <Compile Include="Assets\Third Party\AstarPathfindingProject\Editor\AstarPathEditor.cs" />
+    <Compile Include="Assets\Third Party\AstarPathfindingProject\Editor\AstarUpdateChecker.cs" />
+    <Compile Include="Assets\Third Party\AstarPathfindingProject\Editor\AstarUpdateWindow.cs" />
+    <Compile Include="Assets\Third Party\AstarPathfindingProject\Editor\CustomGraphEditorAttribute.cs" />
+    <Compile Include="Assets\Third Party\AstarPathfindingProject\Editor\EditorGUIx.cs" />
+    <Compile Include="Assets\Third Party\AstarPathfindingProject\Editor\EditorUtilities.cs" />
+    <Compile Include="Assets\Third Party\AstarPathfindingProject\Editor\GraphEditors\GraphEditor.cs" />
+    <Compile Include="Assets\Third Party\AstarPathfindingProject\Editor\GraphEditors\GridGeneratorEditor.cs" />
+    <Compile Include="Assets\Third Party\AstarPathfindingProject\Editor\GraphEditors\NavMeshGeneratorEditor.cs" />
+    <Compile Include="Assets\Third Party\AstarPathfindingProject\Editor\GraphEditors\PointGeneratorEditor.cs" />
+    <Compile Include="Assets\Third Party\AstarPathfindingProject\Editor\GraphUpdateSceneEditor.cs" />
+    <Compile Include="Assets\Third Party\AstarPathfindingProject\Editor\Misc\AstarEnumFlagDrawer.cs" />
+    <Compile Include="Assets\Third Party\AstarPathfindingProject\Editor\ModifierEditors\RaycastModifierEditor.cs" />
+    <Compile Include="Assets\Third Party\AstarPathfindingProject\Editor\ModifierEditors\SmoothModifierEditor.cs" />
+    <Compile Include="Assets\Third Party\AstarPathfindingProject\Editor\SeekerEditor.cs" />
     <Compile Include="Assets\Third Party\InControl\Editor\EditorUtility.cs" />
     <Compile Include="Assets\Third Party\InControl\Editor\InControlBuilder.cs" />
     <Compile Include="Assets\Third Party\InControl\Editor\InControlInputModuleEditor.cs" />
@@ -174,6 +172,19 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Data\cubedata.txt" />
+    <None Include="Assets\Third Party\AstarPathfindingProject\Editor\EditorAssets\Materials\Navmesh.shader" />
+    <None Include="Assets\Third Party\AstarPathfindingProject\Editor\EditorAssets\Materials\NavmeshOutline.shader" />
+    <None Include="Assets\Third Party\AstarPathfindingProject\ExampleScenes\Materials\DiffuseAlwaysVisible.shader" />
+    <None Include="Assets\Third Party\AstarPathfindingProject\ExampleScenes\Materials\Projector Light.shader" />
+    <None Include="Assets\Third Party\AstarPathfindingProject\ExampleScenes\Materials\Projector Multiply.shader" />
+    <None Include="Assets\Third Party\AstarPathfindingProject\ExampleScenes\_Example Scenes.txt" />
+    <None Include="Assets\Third Party\AstarPathfindingProject\Plugins\DotNetZip\DotNetZipLicense.txt" />
+    <None Include="Assets\Third Party\AstarPathfindingProject\Plugins\JsonFx\JsonFxLicense.txt" />
+    <None Include="Assets\Third Party\AstarPathfindingProject\Plugins\JsonFx\Readme.txt" />
+    <None Include="Assets\Third Party\AstarPathfindingProject\Plugins\dependencies.txt" />
+    <None Include="Assets\Third Party\AstarPathfindingProject\Readme.txt" />
+    <None Include="Assets\Third Party\AstarPathfindingProject\Readme_upgrading.txt" />
+    <None Include="Assets\Third Party\AstarPathfindingProject\link.xml" />
     <None Include="Assets\Third Party\DOTween\DOTween.XML" />
     <None Include="Assets\Third Party\DOTween\DOTween43.xml" />
     <None Include="Assets\Third Party\DOTween\DOTween46.xml" />

@@ -10,6 +10,8 @@ public class HeldItemController : MonoBehaviour
     private GameObject currentlyHeldItem;
     private Useable currentlyHeldActions;
 
+    private bool actionHeld;
+
     void Start()
     {
         if (GetComponent<InputBus>())
@@ -58,9 +60,17 @@ public class HeldItemController : MonoBehaviour
     {
         if (enabled)
         {
-            if (currentlyHeldActions != null && input.UseItem)
+            if (input.UseItem)
             {
-                currentlyHeldActions.Action.Invoke();
+                if (currentlyHeldActions != null && !actionHeld)
+                {
+                    actionHeld = true;
+                    currentlyHeldActions.Action.Invoke();
+                }
+            }
+            else
+            {
+                actionHeld = false;
             }
         }
     }
