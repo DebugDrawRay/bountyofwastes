@@ -29,14 +29,25 @@ public class Jets : MonoBehaviour
 
     void ActivateJets(InputState input)
     {
-        Vector3 direction = Quaternion.AngleAxis(-input.Move.x * 45, Vector3.up) * (input.Move.x * transform.right);
-
-        if (input.Jump && CheckGrounded())
+        if (enabled)
         {
-            if (input.Move.x == 0)
+            Vector3 direction = Quaternion.AngleAxis(-input.Move.x * 45, Vector3.up) * (input.Move.x * transform.right);
+
+            if (input.Jump && CheckGrounded())
             {
-                Vector3 force = Vector3.up * jetStrength;
-                rigid.AddForce(force, ForceMode.Impulse);
+                if (input.LockOn)
+                {
+                    if (input.Move.x == 0)
+                    {
+                        Vector3 force = Vector3.up * jetStrength;
+                        rigid.AddForce(force, ForceMode.Impulse);
+                    }
+                }
+                else
+                {
+                    Vector3 force = Vector3.up * jetStrength;
+                    rigid.AddForce(force, ForceMode.Impulse);
+                }
             }
         }
     }

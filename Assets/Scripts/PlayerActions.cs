@@ -19,6 +19,7 @@ public class PlayerActions : PlayerActionSet
     public PlayerAction Jump;
     public PlayerAction UseItem;
     public PlayerAction LockOn;
+    public PlayerAction ToggleScanner;
 
     public PlayerAction SwitchActionUp;
     public PlayerAction SwitchActionDown;
@@ -42,6 +43,7 @@ public class PlayerActions : PlayerActionSet
         Jump = CreatePlayerAction("Jump");
         UseItem = CreatePlayerAction("Use Item");
         LockOn = CreatePlayerAction("Lock On");
+        ToggleScanner = CreatePlayerAction("Toggle Scanner");
 
         SwitchActionUp = CreatePlayerAction("Switch Action Up");
         SwitchActionDown = CreatePlayerAction("Switch Action Down");
@@ -64,6 +66,7 @@ public class PlayerActions : PlayerActionSet
         actions.Jump.AddDefaultBinding(Key.Space);
         actions.UseItem.AddDefaultBinding(Mouse.LeftButton);
         actions.LockOn.AddDefaultBinding(Mouse.RightButton);
+        actions.ToggleScanner.AddDefaultBinding(Mouse.MiddleButton);
 
         actions.SwitchActionUp.AddDefaultBinding(Mouse.PositiveScrollWheel);
         actions.SwitchActionDown.AddDefaultBinding(Mouse.NegativeScrollWheel);

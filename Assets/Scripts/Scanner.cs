@@ -6,6 +6,7 @@ public class Scanner : MonoBehaviour
     public float timeToScan;
     private float currentScanTime;
     private bool scanned;
+    private bool scannerActive;
 
     void Start()
     {
@@ -27,7 +28,16 @@ public class Scanner : MonoBehaviour
 
     void Scan(InputState input)
     {
-        if (input.LockOn && enabled)
+        if(input.ToggleScanner)
+        {
+            scannerActive = !scannerActive;
+            if(GetComponent<HeldItemController>() != null)
+            {
+                GetComponent<HeldItemController>().enabled = !scannerActive;
+            }
+        }
+
+        if (scannerActive && input.LockOn && enabled)
         {
             LockOn locked = GetComponent<LockOn>();
             if (locked != null && locked.target != null)
@@ -45,7 +55,7 @@ public class Scanner : MonoBehaviour
                         {
                             if (!scanned)
                             {
-                                EventSystem.DisplayData(newData.textData);
+                                EventSystem.DisplayData(newData.textData, newData.imageData);
                                 scanned = true;
                             }
                         }
@@ -56,7 +66,7 @@ public class Scanner : MonoBehaviour
         else
         {
             currentScanTime = timeToScan;
-            EventSystem.DisplayData(null);
+            EventSystem.DisplayData(null, null);
             scanned = false;
         }
     }

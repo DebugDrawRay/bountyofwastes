@@ -82,7 +82,8 @@ public class EightWayMovement : MonoBehaviour
 
             if (dodging)
             {
-                Vector3 dodgeAngle = Quaternion.AngleAxis(-dodgeDirection * 20, Vector3.up) * (transform.right * dodgeDirection);
+                //Vector3 dodgeAngle = Quaternion.AngleAxis(-dodgeDirection * 20, Vector3.up) * (transform.right * dodgeDirection);
+                Vector3 dodgeAngle = transform.right * dodgeDirection;
                 if (currentDodgeLength >= 0)
                 {
                     Vector3 force = dodgeAngle * dodgeSpeed;

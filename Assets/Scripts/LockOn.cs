@@ -85,10 +85,10 @@ public class LockOn : MonoBehaviour
     void LockedOn()
     {
         Vector3 dir = target.position - head.transform.position;
-        Vector3 lookRot = Quaternion.LookRotation(dir, Vector3.up).eulerAngles;
+        Vector3 lookRot = Quaternion.LookRotation(dir).eulerAngles;
 
         head.localRotation = Quaternion.Euler(lookRot.x, 0, 0);
-        transform.rotation = Quaternion.Euler(0, lookRot.y, 0);
+        transform.localRotation = Quaternion.Euler(0, lookRot.y, 0);
 
         if (GetComponent<RotateLook>() != null)
         {

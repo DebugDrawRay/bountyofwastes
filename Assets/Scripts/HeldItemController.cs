@@ -1,24 +1,14 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class RightArm : MonoBehaviour
+public class HeldItemController : MonoBehaviour
 {
     public GameObject[] availableItems;
     public int selectedItem;
     //For parenting
     public Transform head;
-
-    [Header("Scanner Reference")]
-    public Scanner scanner;
-
     private GameObject currentlyHeldItem;
     private Useable currentlyHeldActions;
-
-    void Awake()
-    {
-        HoldItem(selectedItem);
-        scanner.enabled = false;
-    }
 
     void Start()
     {
@@ -26,9 +16,19 @@ public class RightArm : MonoBehaviour
         {
             GetComponent<InputBus>().Subscribe(UseItem);
             GetComponent<InputBus>().Subscribe(SwitchHeld);
-
         }
     }
+
+    void OnEnable()
+    {
+        HoldItem(selectedItem);
+    }
+
+    void OnDisable()
+    {
+        HoldItem(-1);
+    }
+
     void OnDestroy()
     {
         if (GetComponent<InputBus>())
@@ -38,24 +38,16 @@ public class RightArm : MonoBehaviour
         }
     }
 
-    void ToggleScanner(bool enable)
-    {
-        if (scanner != null)
-        {
-            Destroy(currentlyHeldItem);
-            scanner.enabled = enable;
-        }
-    }
-
     void HoldItem(int newItem)
     {
-        if (newItem < availableItems.Length)
+        Destroy(currentlyHeldItem);
+
+        if (newItem < availableItems.Length && newItem >= 0)
         {
             selectedItem = newItem;
-            Destroy(currentlyHeldItem);
 
             currentlyHeldItem = Instantiate(availableItems[selectedItem]);
-            currentlyHeldItem.transform.position = transform.position;
+            currentlyHeldItem.transform.position = head.position;
             currentlyHeldItem.transform.SetParent(head);
             currentlyHeldItem.transform.localRotation = Quaternion.identity;
             currentlyHeldActions = currentlyHeldItem.GetComponent<Useable>();
@@ -64,46 +56,35 @@ public class RightArm : MonoBehaviour
 
     void UseItem(InputState input)
     {
-        if(currentlyHeldActions != null && input.UseItem)
+        if (enabled)
         {
-            currentlyHeldActions.Action.Invoke();
+            if (currentlyHeldActions != null && input.UseItem)
+            {
+                currentlyHeldActions.Action.Invoke();
+            }
         }
     }
 
     void SwitchHeld(InputState input)
     {
-        if(input.SwitchActionUp)
+        if (enabled)
         {
-            selectedItem += 1;
-            if(selectedItem >= availableItems.Length)
+            if (input.SwitchActionUp)
             {
-                if (scanner != null)
-                {
-                    selectedItem = -1;
-                }
-                else
+                selectedItem += 1;
+                if (selectedItem >= availableItems.Length)
                 {
                     selectedItem = 0;
                 }
             }
-        }
-        if (input.SwitchActionDown)
-        {
-            selectedItem -= 1;
-            if(selectedItem < -1)
+            if (input.SwitchActionDown)
             {
-                selectedItem = availableItems.Length - 1;
+                selectedItem -= 1;
+                if (selectedItem < 0)
+                {
+                    selectedItem = availableItems.Length - 1;
+                }
             }
-        }
-
-        if(selectedItem == -1)
-        {
-            ToggleScanner(true);
-        }
-        else
-        {
-            ToggleScanner(false);
-            HoldItem(selectedItem);
         }
     }
 }

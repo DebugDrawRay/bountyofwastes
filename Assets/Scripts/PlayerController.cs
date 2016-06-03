@@ -14,7 +14,7 @@ public class PlayerController : MonoBehaviour
         actions = PlayerActions.BindKeyboardAndJoystick();
 	}
 	
-	void FixedUpdate()
+	void Update()
     {
         UpdateInput();
         targetObject.Actions(input);
@@ -28,6 +28,7 @@ public class PlayerController : MonoBehaviour
         input.Jump = actions.Jump.WasPressed;
         input.UseItem = actions.UseItem.IsPressed;
         input.LockOn = actions.LockOn.IsPressed;
+        input.ToggleScanner = actions.ToggleScanner.WasPressed;
 
         input.SwitchActionUp = actions.SwitchActionUp.WasPressed;
         input.SwitchActionDown = actions.SwitchActionDown.WasPressed;

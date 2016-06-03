@@ -14,6 +14,16 @@ public class Weapon : MonoBehaviour
     public int activationLimit;
     private int currentActivations;
 
+    [Header("Weapon Visuals")]
+    public Transform weapon;
+    public float weaponOrientationSpeed;
+    public float orientationDistanceMin;
+    private Quaternion originWeaponRot;
+
+    void Start()
+    {
+        originWeaponRot = weapon.localRotation;
+    }
     void Update()
     {
         if(currentCooldown > 0)
@@ -25,6 +35,8 @@ public class Weapon : MonoBehaviour
         {
             currentActivationTime -= Time.deltaTime;
         }
+
+        OrientToTarget();
     }
 
     public void Attack()
@@ -44,6 +56,26 @@ public class Weapon : MonoBehaviour
                     currentActivationTime = 0;
                 }
             }
+        }
+    }
+
+    void OrientToTarget()
+    {
+        Ray dirRay = new Ray(transform.position, transform.forward);
+        RaycastHit hit;
+
+        if(Physics.Raycast(dirRay, out hit))
+        {
+            Debug.Log(Vector3.Distance(transform.position, hit.point));
+            if (Vector3.Distance(transform.position, hit.point) > orientationDistanceMin)
+            {
+                Quaternion look = Quaternion.LookRotation(hit.point - weapon.position);
+                weapon.rotation = Quaternion.Slerp(weapon.rotation, look, weaponOrientationSpeed);
+            }
+        }
+        else
+        {
+            weapon.localRotation = Quaternion.Slerp(weapon.localRotation, originWeaponRot, weaponOrientationSpeed);
         }
     }
 }

@@ -6,11 +6,18 @@ public class HUDController : MonoBehaviour
 {
     [Header("Data Display")]
     public Text textData;
+    public Image imageData;
     private bool textDisplayed;
+    private bool imageDisplayed;
+
     void Start()
     {
         EventSystem.DataDisplayEvent += DisplayData;
         textData.text = "";
+        Color none = Color.white;
+        none.a = 0;
+        imageData.color = none;
+        imageData.sprite = null;
     }
 
     void OnDestroy()
@@ -18,7 +25,7 @@ public class HUDController : MonoBehaviour
         EventSystem.DataDisplayEvent -= DisplayData;
     }
 
-    void DisplayData(TextAsset text)
+    void DisplayData(TextAsset text, Sprite image)
     {
         if(text == null)
         {
@@ -32,6 +39,19 @@ public class HUDController : MonoBehaviour
                 textData.DOText(text.text, 2f, false, ScrambleMode.All);
                 textDisplayed = true;
             }
+        }
+
+        if(image == null)
+        {
+            Color none = Color.white;
+            none.a = 0;
+            imageData.color = none;
+            imageData.sprite = null;
+        }
+        else
+        {
+            imageData.color = Color.white;
+            imageData.sprite = image;
         }
     }
 }
