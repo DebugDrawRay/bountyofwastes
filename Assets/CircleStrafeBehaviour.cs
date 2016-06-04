@@ -16,27 +16,44 @@ public class CircleStrafeBehaviour : InputController
     private float currentManeuveringLength;
 
     public int maneuveringPeriods;
+    public float maneuveringPeriodDelay;
+    private float currentDelay;
     private float currentPeriod;
+
+    public float distanceLimit;
 
     [Header("Direction Control")]
     public Vector3[] maneuveringDirections;
     public bool randomizeDirections;
     public float targetFacingSpeed;
-    private int currentDirection = 0;
+
+    private Vector3 currentDirection;
+    private int selectedDirection = 0;
 
     [Header("Attacking Properties")]
     public float attackLength;
+    private float currentAttackLength;
 
-    private Transform target;
+    public Transform target
+    {
+        get;
+        private set;
+    }
 
     void Awake()
     {
         Initialize();
+
+        maneuveringLength += maneuveringPeriodDelay * maneuveringPeriods;
         currentManeuveringLength = maneuveringLength;
         currentPeriod = maneuveringLength / maneuveringPeriods;
+        currentDelay = maneuveringPeriodDelay;
+
+        currentAttackLength = attackLength;
+
         if (randomizeDirections)
         {
-            currentDirection = Random.Range(0, maneuveringDirections.Length);
+            selectedDirection = Random.Range(0, maneuveringDirections.Length);
         }
     }
 
@@ -58,15 +75,24 @@ public class CircleStrafeBehaviour : InputController
             case State.Inactive:
                 break;
             case State.Maneuvering:
-                Maneuver();
+                if (!Maneuver())
+                {
+                    currentState = State.Attacking;
+                }
                 break;
             case State.Attacking:
+                if(!Attacking())
+                {
+                    currentState = State.Maneuvering;
+                }
                 break;
         }
     }
 
-    void Maneuver()
+    bool Maneuver()
     {
+        float distance = Vector3.Distance(transform.position, target.position);
+
         if (maneuveringDirections.Length > 0)
         {
             if (currentManeuveringLength > 0)
@@ -75,45 +101,87 @@ public class CircleStrafeBehaviour : InputController
                 if (currentPeriod > 0)
                 {
                     currentPeriod -= Time.deltaTime;
-                    input.Move = maneuveringDirections[currentDirection];
+                    input.Move = currentDirection;
+                    LookAtTarget();
                 }
                 else
                 {
-                    if(randomizeDirections)
+                    if (currentDelay > 0)
                     {
-                        currentDirection = Random.Range(0, maneuveringDirections.Length);
+                        currentDelay -= Time.deltaTime;
+                        input.Move = input.Move * .9f;
                     }
                     else
                     {
-                        currentDirection++;
-                        if(currentDirection >= maneuveringDirections.Length)
+                        if (distance >= distanceLimit)
                         {
-                            currentDirection = 0;
+                            currentDirection = new Vector3(0, .5f, 0);
                         }
+                        else
+                        {
+                            currentDirection = FindNewDirection();
+                        }
+                        currentPeriod = maneuveringLength / maneuveringPeriods;
+                        currentDelay = maneuveringPeriodDelay;
                     }
-                    currentPeriod = maneuveringLength / maneuveringPeriods;
                 }
+                return true;
+            }
+            else
+            {
+                currentManeuveringLength = maneuveringLength;
+                currentPeriod = maneuveringLength / maneuveringPeriods;
+                currentDirection = FindNewDirection();
+                input.Move = Vector3.zero;
+                return false;
             }
         }
         else
         {
-            currentManeuveringLength = maneuveringLength;
-            currentPeriod = maneuveringLength / maneuveringPeriods;
-            if (randomizeDirections)
-            {
-                currentDirection = Random.Range(0, maneuveringDirections.Length);
-            }
-            else
-            {
-                currentDirection = 0;
-            }
+            input.Move = Vector3.zero;
+            return false;
         }
+    }
 
+    bool Attacking()
+    {
+        if(currentAttackLength > 0)
+        {
+            currentAttackLength -= Time.deltaTime;
+            input.UseItem = true;
+            return true;
+        }
+        else
+        {
+            input.UseItem = false;
+            currentAttackLength = attackLength;
+            return false;
+        }
+    }
+
+    void LookAtTarget()
+    {
         Vector3 direction = Quaternion.LookRotation(target.position - transform.position).eulerAngles;
         direction.x = 0;
         direction.z = 0;
         Quaternion lookAt = Quaternion.Euler(direction);
-
         transform.rotation = Quaternion.Slerp(transform.rotation, lookAt, targetFacingSpeed);
+    }
+
+    Vector3 FindNewDirection()
+    {
+        if (randomizeDirections)
+        {
+            selectedDirection = Random.Range(0, maneuveringDirections.Length);
+        }
+        else
+        {
+            selectedDirection++;
+            if (selectedDirection >= maneuveringDirections.Length)
+            {
+                selectedDirection = 0;
+            }
+        }
+        return maneuveringDirections[selectedDirection];
     }
 }

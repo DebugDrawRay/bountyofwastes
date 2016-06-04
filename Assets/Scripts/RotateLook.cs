@@ -9,8 +9,6 @@ public class RotateLook : MonoBehaviour
     [Header("Properties")]
     public float sensitivity;
     public float smoothing;
-
-    public CursorLockMode lockMode;
     
     //Rotations
     private float xRot;
@@ -18,7 +16,6 @@ public class RotateLook : MonoBehaviour
 
     void Start()
     {
-        Cursor.lockState = lockMode;
         if (GetComponent<InputBus>())
         {
             GetComponent<InputBus>().Subscribe(UpdateLook);
