@@ -16,6 +16,9 @@ public class InputController : MonoBehaviour
 
     protected void UpdateBus()
     {
-        targetObject.Actions(input);
+        if (targetObject)
+        {
+            targetObject.Actions(input);
+        }
     }
 }

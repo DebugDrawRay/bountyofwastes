@@ -5,14 +5,19 @@ using DG.Tweening;
 public class HUDController : MonoBehaviour
 {
     [Header("Data Display")]
+    public Image scanModeImage;
+    public Image scanProgressImage;
     public Text textData;
     public Image imageData;
     private bool textDisplayed;
     private bool imageDisplayed;
 
+
     void Start()
     {
+        EventSystem.ScanModeEvent += ToggleScanMode;
         EventSystem.DataDisplayEvent += DisplayData;
+        EventSystem.ScanProgressEvent += ScanProgress;
         textData.text = "";
         Color none = Color.white;
         none.a = 0;
@@ -23,6 +28,22 @@ public class HUDController : MonoBehaviour
     void OnDestroy()
     {
         EventSystem.DataDisplayEvent -= DisplayData;
+        EventSystem.ScanProgressEvent -= ScanProgress;
+        EventSystem.ScanModeEvent -= ToggleScanMode;
+    }
+
+    void ToggleScanMode()
+    {
+        scanModeImage.enabled = !scanModeImage.enabled;
+    }
+
+    void ScanProgress(float progress)
+    {
+        scanProgressImage.fillAmount = progress;
+        if(progress >= 1)
+        {
+            scanProgressImage.fillAmount = 0;
+        }
     }
 
     void DisplayData(TextAsset text, Sprite image)
@@ -36,7 +57,7 @@ public class HUDController : MonoBehaviour
         {
             if (!textDisplayed)
             {
-                textData.DOText(text.text, 2f, false, ScrambleMode.All);
+                textData.text = text.text;
                 textDisplayed = true;
             }
         }
@@ -50,7 +71,9 @@ public class HUDController : MonoBehaviour
         }
         else
         {
-            imageData.color = Color.white;
+            Color white = Color.white;
+            white.a = .5f;
+            imageData.color = white;
             imageData.sprite = image;
         }
     }

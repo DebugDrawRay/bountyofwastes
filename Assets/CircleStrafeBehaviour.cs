@@ -51,10 +51,7 @@ public class CircleStrafeBehaviour : InputController
 
         currentAttackLength = attackLength;
 
-        if (randomizeDirections)
-        {
-            selectedDirection = Random.Range(0, maneuveringDirections.Length);
-        }
+        currentDirection = FindNewDirection();
     }
 
     void Start()
@@ -91,54 +88,61 @@ public class CircleStrafeBehaviour : InputController
 
     bool Maneuver()
     {
-        float distance = Vector3.Distance(transform.position, target.position);
-
-        if (maneuveringDirections.Length > 0)
+        if (target)
         {
-            if (currentManeuveringLength > 0)
+            float distance = Vector3.Distance(transform.position, target.position);
+            LookAtTarget();
+
+            if (maneuveringDirections.Length > 0)
             {
-                currentManeuveringLength -= Time.deltaTime;
-                if (currentPeriod > 0)
+                if (currentManeuveringLength > 0)
                 {
-                    currentPeriod -= Time.deltaTime;
-                    input.Move = currentDirection;
-                    LookAtTarget();
-                }
-                else
-                {
-                    if (currentDelay > 0)
+                    currentManeuveringLength -= Time.deltaTime;
+                    if (currentPeriod > 0)
                     {
-                        currentDelay -= Time.deltaTime;
-                        input.Move = input.Move * .9f;
+                        currentPeriod -= Time.deltaTime;
+                        input.Move = currentDirection;
                     }
                     else
                     {
-                        if (distance >= distanceLimit)
+                        if (currentDelay > 0)
                         {
-                            currentDirection = new Vector3(0, .5f, 0);
+                            currentDelay -= Time.deltaTime;
+                            input.Move = input.Move * .9f;
                         }
                         else
                         {
-                            currentDirection = FindNewDirection();
+                            if (distance >= distanceLimit)
+                            {
+                                currentDirection = new Vector3(0, .5f, 0);
+                            }
+                            else
+                            {
+                                currentDirection = FindNewDirection();
+                            }
+                            currentPeriod = maneuveringLength / maneuveringPeriods;
+                            currentDelay = maneuveringPeriodDelay;
                         }
-                        currentPeriod = maneuveringLength / maneuveringPeriods;
-                        currentDelay = maneuveringPeriodDelay;
                     }
+                    return true;
                 }
-                return true;
+                else
+                {
+                    currentManeuveringLength = maneuveringLength;
+                    currentPeriod = maneuveringLength / maneuveringPeriods;
+                    currentDirection = FindNewDirection();
+                    input.Move = Vector3.zero;
+                    return false;
+                }
             }
             else
             {
-                currentManeuveringLength = maneuveringLength;
-                currentPeriod = maneuveringLength / maneuveringPeriods;
-                currentDirection = FindNewDirection();
                 input.Move = Vector3.zero;
                 return false;
             }
         }
         else
         {
-            input.Move = Vector3.zero;
             return false;
         }
     }
@@ -161,11 +165,14 @@ public class CircleStrafeBehaviour : InputController
 
     void LookAtTarget()
     {
-        Vector3 direction = Quaternion.LookRotation(target.position - transform.position).eulerAngles;
-        direction.x = 0;
-        direction.z = 0;
-        Quaternion lookAt = Quaternion.Euler(direction);
-        transform.rotation = Quaternion.Slerp(transform.rotation, lookAt, targetFacingSpeed);
+        if (target)
+        {
+            Vector3 direction = Quaternion.LookRotation(target.position - transform.position).eulerAngles;
+            direction.x = 0;
+            direction.z = 0;
+            Quaternion lookAt = Quaternion.Euler(direction);
+            transform.rotation = Quaternion.Slerp(transform.rotation, lookAt, targetFacingSpeed);
+        }
     }
 
     Vector3 FindNewDirection()

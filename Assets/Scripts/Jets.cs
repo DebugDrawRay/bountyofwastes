@@ -7,13 +7,14 @@ public class Jets : MonoBehaviour
 
     [Header("Properties")]
     public float jetStrength;
+    public bool enableDoubleJump;
+
+    //Double Jump
+    private bool inAir;
 
     [Header("Grounding Checks")]
     public float checkGroundedDistance;
     public LayerMask ground;
-
-    //Double Jump
-    private bool inAir;
 
     void Start()
     {
@@ -58,7 +59,7 @@ public class Jets : MonoBehaviour
             }
             else
             {
-                if(inAir && input.Jump)
+                if(inAir && input.Jump && enableDoubleJump)
                 {
                     Vector3 force = Vector3.up * jetStrength;
                     rigid.velocity = new Vector3(rigid.velocity.x, 0, rigid.velocity.z);

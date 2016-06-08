@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using CollisionUtilities;
 
 public class RamAction : MonoBehaviour
 {
@@ -13,14 +14,16 @@ public class RamAction : MonoBehaviour
     public bool faceTarget;
     public float targetFacingSpeed;
 
+    [Header("Collision Handling")]
+    public bool stopRamOnCollision;
+    public string[] ignoredTags;
+
     private Transform facingTarget;
     private bool inRam;
     private bool lookAt = true;
 
     void Start()
     {
-
-
         if (GetComponent<InputBus>())
         {
             GetComponent<InputBus>().Subscribe(Ram);
@@ -80,6 +83,15 @@ public class RamAction : MonoBehaviour
                 Quaternion lookAt = Quaternion.Euler(direction);
                 transform.rotation = Quaternion.Slerp(transform.rotation, lookAt, targetFacingSpeed);
             }
+        }
+    }
+
+    void OnTriggerEnter(Collider hit)
+    {
+        if(!Check.IgnoredTags(hit.tag, ignoredTags) && stopRamOnCollision)
+        {
+            Debug.Log("Stop Ram");
+            rigid.velocity = Vector3.zero;
         }
     }
 }
