@@ -18,6 +18,7 @@ public class Weapon : MonoBehaviour
     public Transform weapon;
     public float weaponOrientationSpeed;
     public float orientationDistanceMin;
+    public LayerMask orientationTargetLayers;
     private Quaternion originWeaponRot;
 
     void Start()
@@ -64,7 +65,7 @@ public class Weapon : MonoBehaviour
         Ray dirRay = new Ray(transform.position, transform.forward);
         RaycastHit hit;
 
-        if(Physics.Raycast(dirRay, out hit))
+        if(Physics.Raycast(dirRay, out hit, Mathf.Infinity, orientationTargetLayers))
         {
             if (Vector3.Distance(transform.position, hit.point) > orientationDistanceMin)
             {

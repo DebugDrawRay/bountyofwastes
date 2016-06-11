@@ -5,24 +5,23 @@ using DG.Tweening;
 public class ShieldController : MonoBehaviour
 {
     public GameObject shieldObject;
-    private GameObject currentShield;
     public Vector3 restingPosition;
     public Vector3 raisedPosition;
     public float raiseSpeed;
-    public Transform head;
 
     private bool raiseHeld;
+
     void Start()
     {
-        currentShield = Instantiate(shieldObject, transform.position, Quaternion.identity) as GameObject;
-        currentShield.transform.SetParent(head);
-        currentShield.transform.localPosition = restingPosition;
+        shieldObject.transform.localPosition = restingPosition;
+        shieldObject.SetActive(false);
 
         if (GetComponent<InputBus>())
         {
             GetComponent<InputBus>().Subscribe(RaiseShield);
         }
     }
+
     void OnDestroy()
     {
         if (GetComponent<InputBus>())
@@ -31,27 +30,49 @@ public class ShieldController : MonoBehaviour
         }
     }
 
-    void RaiseShield(InputState input)
+    void Update()
     {
-        if(input.LockOn)
+        if(shieldObject.transform.localPosition == restingPosition)
         {
-            currentShield.transform.DOLocalMove(restingPosition, raiseSpeed);
+            shieldObject.SetActive(false);
         }
         else
         {
-            if (input.RaiseShield)
+            shieldObject.SetActive(true);
+        }
+    }
+    void RaiseShield(InputState input)
+    {
+        if (input.LockOn)
+        {
+            shieldObject.transform.DOLocalMove(restingPosition, raiseSpeed);
+        }
+        else
+        {
+            if (GetComponent<StatusController>())
             {
-                if (!raiseHeld)
+                if (GetComponent<StatusController>().currentShield > 0)
                 {
-                    currentShield.transform.DOLocalMove(raisedPosition, raiseSpeed);
-                    raiseHeld = true;
+                    if (input.RaiseShield)
+                    {
+                        if (!raiseHeld)
+                        {
+                            shieldObject.transform.DOLocalMove(raisedPosition, raiseSpeed);
+                            raiseHeld = true;
+                        }
+                    }
+                    else
+                    {
+                        if (raiseHeld)
+                        {
+                            shieldObject.transform.DOLocalMove(restingPosition, raiseSpeed);
+                            raiseHeld = false;
+                        }
+                    }
                 }
-            }
-            else
-            {
-                if (raiseHeld)
+                else
                 {
-                    currentShield.transform.DOLocalMove(restingPosition, raiseSpeed);
+                    shieldObject.transform.DOLocalMove(restingPosition, raiseSpeed);
                     raiseHeld = false;
                 }
             }

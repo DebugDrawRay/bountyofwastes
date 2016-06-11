@@ -12,13 +12,23 @@ public class StatusController : MonoBehaviour
         Shield
     }
 
-    [Header("Stat Resources")]
+    [Header("Armor Resource")]
     public float baseArmor;
     public int armorModules;
+    public float currentArmor
+    {
+        get;
+        private set;
+    }
+
+    [Header("Shield Resource")]
     public float baseShield;
     public int shieldModules;
-
-    private Dictionary<Stat, float> currentStats;
+    public float currentShield
+    {
+        get;
+        private set;
+    }
 
     //Power - Controls functionality of modules
 
@@ -52,11 +62,8 @@ public class StatusController : MonoBehaviour
 
     void InitializeCurrentStatus()
     {
-        currentStats = new Dictionary<Stat, float>()
-        {
-            {Stat.Armor, baseArmor + (baseArmor * armorModules) },
-            {Stat.Shield, baseShield + (baseShield * shieldModules) }
-        };
+        currentArmor = baseArmor + (baseArmor * armorModules);
+        currentShield = baseShield + (baseShield * shieldModules);
 
         currentPowerDistribution = new Dictionary<PowerInterface, int>()
         {
@@ -68,12 +75,12 @@ public class StatusController : MonoBehaviour
         };
     }
 
-    public void ModifyCurrentStat(Stat target, float amount)
+    public void ModifyArmor(CollisionInfo info)
     {
         if (!invul)
         {
-            currentStats[target] = currentStats[target] + amount;
-            if (amount < 0)
+            currentArmor = currentArmor + info.statChangeAmount;
+            if (info.statChangeAmount < 0)
             {
                 DamagedEvent();
             }
@@ -85,9 +92,23 @@ public class StatusController : MonoBehaviour
         }
     }
 
+    public void ModifyShield(CollisionInfo info)
+    {
+        currentShield = currentShield + info.statChangeAmount;
+        if (info.statChangeAmount < 0)
+        {
+            DamagedEvent();
+        }
+        if (invulnerableTime > 0)
+        {
+            StartCoroutine(Invulnerable(invulnerableTime));
+        }
+        CheckStatus();
+    }
+
     void CheckStatus()
     {
-        if(currentStats[Stat.Armor] <= 0)
+        if(currentArmor <= 0)
         {
             DeathEvent();
         }
