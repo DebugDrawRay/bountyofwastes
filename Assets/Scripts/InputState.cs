@@ -7,6 +7,7 @@ public class InputState
 
     public bool Jump;
     public bool UseItem;
+    public bool RaiseShield;
     public bool LockOn;
     public bool ToggleScanner;
 

@@ -29,6 +29,7 @@ public class PlayerController : InputController
 
         input.Jump = actions.Jump.WasPressed;
         input.UseItem = actions.UseItem.IsPressed;
+        input.RaiseShield = actions.RaiseShield.IsPressed;
         input.LockOn = actions.LockOn.IsPressed;
         input.ToggleScanner = actions.ToggleScanner.WasPressed;
 
